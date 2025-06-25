@@ -3,7 +3,6 @@ from discord.ext import commands
 from discord import app_commands
 import datetime
 from sympy import sympify, simplify
-from keep_alive import keep_alive
 import os
 
 intents = discord.Intents.default()
@@ -190,5 +189,4 @@ class SetGroup(app_commands.Group):
 
 
 bot.tree.add_command(SetGroup())  # Command untuk slash ``/set ...``
-keep_alive()
 bot.run(os.environ['Token'])
