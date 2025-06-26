@@ -189,4 +189,4 @@ class SetGroup(app_commands.Group):
 
 
 bot.tree.add_command(SetGroup())  # Command untuk slash ``/set ...``
-bot.run(os.environ["TOKEN"])
+bot.run(os.getenv["TOKEN"])
