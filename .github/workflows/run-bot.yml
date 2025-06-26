@@ -24,8 +24,3 @@ jobs:
     - name: Run bot
       run: |
         python main.py
-
-    - name: Jalankan bot Discord
-      run: python main.py
-        env:
-        TOKEN: ${{ secrets.TOKEN }}
