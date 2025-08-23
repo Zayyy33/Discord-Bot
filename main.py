@@ -96,7 +96,7 @@ async def info(ctx):
 
 @bot.command()
 async def pi(ctx):
-    await ctx.send("\[\pi\]")
+    await ctx.send(",tex $\pi$")
 
 
 class SetGroup(app_commands.Group):
