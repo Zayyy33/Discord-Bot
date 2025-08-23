@@ -186,7 +186,10 @@ class SetGroup(app_commands.Group):
         await interaction.response.send_message(
             f":wrench: Jawaban soal telah diatur menjadi **{jwb}**",
             ephemeral=True)
-
+        
+    @bot.command()
+    async def pi(ctx):
+        await ctx.send("$\pi$")
 
 bot.tree.add_command(SetGroup())  # Command untuk slash ``/set ...``
 bot.run(os.getenv("TOKEN"))
