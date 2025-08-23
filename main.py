@@ -94,6 +94,10 @@ async def info(ctx):
         color=discord.Color.purple())
     await ctx.send(embed=info)
 
+@bot.command()
+async def pi(ctx):
+    await ctx.send("$\\pi$")
+
 
 class SetGroup(app_commands.Group):
 
@@ -187,9 +191,6 @@ class SetGroup(app_commands.Group):
             f":wrench: Jawaban soal telah diatur menjadi **{jwb}**",
             ephemeral=True)
         
-    @bot.command()
-    async def pi(ctx):
-        await ctx.send("$\pi$")
 
 bot.tree.add_command(SetGroup())  # Command untuk slash ``/set ...``
 bot.run(os.getenv("TOKEN"))
