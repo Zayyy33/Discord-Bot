@@ -110,14 +110,14 @@ emoji_level = {
     "🔴": integral_susah   
 }
 
-@bot.command(name="soal")
+@bot.command(name="int")
 async def soal(ctx):
     embed = discord.Embed(
-        title="📘 Pilih Level Soal",
-        description="Pilih level soal dengan reaction:\n\n🟢 Mudah\n🟡 Sedang\n🔴 Susah",
-        color=discord.Color.blue()
+        title="📘 Pilih Level Integral",
+        description="Berikut adalah daftar level soal integral diambil dari banyak sumber:\n\n🟢 Mudah\n🟡 Sedang\n🔴 Susah",
+        color=discord.Color.orange()
     )
-    pesan = await ctx.author.send(embed=embed)
+    pesan = await ctx.send(embed=embed)
     
     for e in emoji_level.keys(): # Tambahkan reaction
         await pesan.add_reaction(e)
@@ -138,10 +138,10 @@ async def on_reaction_add(reaction, user):
         if reaction.emoji in emoji_level:
             # ambil soal random dari list sesuai level
             soal = random.choice(emoji_level[reaction.emoji])
-            await user.send(f"📌 Berikut soalnya ({reaction.emoji}): {soal}")
+            await ctx.send("{soal}")
 
-            # hapus reactions supaya tidak bisa dipilih lagi
-            await reaction.message.clear_reactions()
+            # hapus pesan embed pilihan level
+            await reaction.message.delete()
 
 
 class SetGroup(app_commands.Group):
