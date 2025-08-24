@@ -84,6 +84,7 @@ async def info(ctx):
         title=f":question: Info :question:",
         description="Bot masih perlu di update :tools:\n\n"
         "``!problem`` : Untuk memberikan soal-soal terkini (p)\n"
+        "``!int`` : Untuk memberikan soal-soal integral random dari banyak sumber\n"
         "``/answer`` : Untuk menjawab pertanyaan/soal-soal\n"
         "``/set ...`` : Untuk mengatur soal-soal (p)\n"
         "``/set mat`` : Untuk mengatur materi (p)\n"
