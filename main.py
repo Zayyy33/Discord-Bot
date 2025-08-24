@@ -110,7 +110,7 @@ emoji_level = {
     "🔴": integral_susah   
 }
 
-@bot.command()
+@bot.command(name="soal")
 async def soal(ctx):
     embed = discord.Embed(
         title="📘 Pilih Level Soal",
