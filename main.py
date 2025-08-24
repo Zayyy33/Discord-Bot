@@ -94,7 +94,7 @@ async def info(ctx):
         color=discord.Color.purple())
     await ctx.send(embed=info)
 
-@bot.command(name=test)
+@bot.command(name="test")
 async def test(ctx):
     pesan = await ctx.send("Tes Emoji :D")
     # Bot menambahkan reaction
