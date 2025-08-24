@@ -4,11 +4,13 @@ from discord import app_commands
 import datetime
 from sympy import sympify, simplify
 import os
+import random
 
 intents = discord.Intents.default()
 intents.message_content = True
 intents.guilds = True
 intents.members = True  # cek role
+intents.reactions = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
@@ -94,22 +96,52 @@ async def info(ctx):
         color=discord.Color.purple())
     await ctx.send(embed=info)
 
-@bot.command(name="test")
-async def test(ctx):
-    pesan = await ctx.send("Tes Emoji :D")
-    # Bot menambahkan reaction
-    await pesan.add_reaction("👍")
-    await pesan.add_reaction("👎")
+integral_mudah = ["https://cdn.discordapp.com/attachments/1352395370340024430/1409035210913218662/1324375942554058772.png?ex=68abe9cc&is=68aa984c&hm=7517a369522467c00bbb56be528080510e564cb7265e5329e989ef66f7e36930&", 
+             "https://media.discordapp.net/attachments/1352395370340024430/1409038955630039131/1324375942554058772.png?ex=68abed49&is=68aa9bc9&hm=3a1c6c3b9b6d3e8f7aa377e5c72ae8b03ceda69cebab2d03e60a9a83b35cd368&=&format=webp&quality=lossless"]
+
+integral_sedang = ["https://media.discordapp.net/attachments/1352395370340024430/1409039720293335161/1324375942554058772.png?ex=68abee00&is=68aa9c80&hm=27a9744815b4adbb038c1dbe39c30a59877d5dfce156aff0ba77927f7f93d0e5&=&format=webp&quality=lossless", 
+                  "https://media.discordapp.net/attachments/1352395370340024430/1409043596614565969/1324375942554058772.png?ex=68abf19c&is=68aaa01c&hm=307355269f716d5465fcb5fd25d80786c3bd7d88edd45b4616e05025dd465154&=&format=webp&quality=lossless"]
+
+integral_susah = ["https://media.discordapp.net/attachments/1352395370340024430/1409044687834189844/1324375942554058772.png?ex=68abf2a0&is=68aaa120&hm=6c2c7fade469ec5604cc0b256d4a06691d7c2828b85b1d7258a4927e432466b2&=&format=webp&quality=lossless", 
+                 "https://media.discordapp.net/attachments/1352395370340024430/1409045801635942440/1324375942554058772.png?ex=68abf3a9&is=68aaa229&hm=292816a8766e797b9ce5cb964414affd69f3ecd16e1bf18778a44c41609eb9ab&=&format=webp&quality=lossless"]
+emoji_level = {
+    "🟢": integral_mudah,
+    "🟡": integral_sedang,
+    "🔴": integral_susah   
+}
+
+@bot.command()
+async def soal(ctx):
+    embed = discord.Embed(
+        title="📘 Pilih Level Soal",
+        description="Pilih level soal dengan reaction:\n\n🟢 Mudah\n🟡 Sedang\n🔴 Susah",
+        color=discord.Color.blue()
+    )
+    pesan = await ctx.author.send(embed=embed)
+    
+    for e in emoji_level.keys(): # Tambahkan reaction
+        await pesan.add_reaction(e)
+
+    bot.soal_message_id = pesan.id # Simpan pesan ini supaya bisa dicek di on_reaction_add
+    bot.soal_user_id = ctx.author.id
 
 @bot.event
 async def on_reaction_add(reaction, user):
-    if user.bot:  # Supaya bot tidak membaca reactionnya sendiri
+    if user.bot:
         return
-    
-    if reaction.emoji == "👍":
-        await reaction.message.channel.send(f"{user.name} 👍")
-    elif reaction.emoji == "👎":
-        await reaction.message.channel.send(f"{user.name} 👎")
+
+    # pastikan reaction di pesan soal
+    if reaction.message.id == getattr(bot, "soal_message_id", None):
+        if user.id != getattr(bot, "soal_user_id", None):
+            return  # hanya user yang panggil !soal yang bisa pilih
+
+        if reaction.emoji in emoji_level:
+            # ambil soal random dari list sesuai level
+            soal = random.choice(emoji_level[reaction.emoji])
+            await user.send(f"📌 Berikut soalnya ({reaction.emoji}): {soal}")
+
+            # hapus reactions supaya tidak bisa dipilih lagi
+            await reaction.message.clear_reactions()
 
 
 class SetGroup(app_commands.Group):
