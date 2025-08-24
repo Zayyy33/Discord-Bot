@@ -94,9 +94,11 @@ async def info(ctx):
         color=discord.Color.purple())
     await ctx.send(embed=info)
 
-@bot.command()
-async def pi(ctx):
-    await ctx.send(",tex $\pi$")
+async def tes(ctx):
+    pesan = await ctx.send("Tes Emoji :D")
+    # Bot menambahkan reaction
+    await pesan.add_reaction("👍")
+    await pesan.add_reaction("👎")
 
 
 class SetGroup(app_commands.Group):
