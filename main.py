@@ -94,12 +94,22 @@ async def info(ctx):
         color=discord.Color.purple())
     await ctx.send(embed=info)
 
-@bot_command(name=test)
+@bot.command(name=test)
 async def test(ctx):
     pesan = await ctx.send("Tes Emoji :D")
     # Bot menambahkan reaction
     await pesan.add_reaction("👍")
     await pesan.add_reaction("👎")
+
+@bot.event
+async def on_reaction_add(reaction, user):
+    if user.bot:  # Supaya bot tidak membaca reactionnya sendiri
+        return
+    
+    if reaction.emoji == "👍":
+        await reaction.message.channel.send(f"{user.name} 👍")
+    elif reaction.emoji == "👎":
+        await reaction.message.channel.send(f"{user.name} 👎")
 
 
 class SetGroup(app_commands.Group):
