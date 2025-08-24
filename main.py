@@ -138,7 +138,7 @@ async def on_reaction_add(reaction, user):
         if reaction.emoji in emoji_level:
             # ambil soal random dari list sesuai level
             soal = random.choice(emoji_level[reaction.emoji])
-            await ctx.send("{soal}")
+            await ctx.send(soal)
 
             # hapus pesan embed pilihan level
             await reaction.message.delete()
