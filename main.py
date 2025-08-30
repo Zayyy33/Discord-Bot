@@ -125,7 +125,7 @@ async def on_reaction_add(reaction, user):
         if user.id != getattr(bot, "soal_user_id", None):
             return  # hanya user yang panggil !soal yang bisa pilih
 
-        if reaction.emoji in emoji_level:
+        if reaction.emoji in ["🟢", "🟡", "🔴"]:
             soal_data = await get_soal()
 
             if str(reaction.emoji) == "🟢":
