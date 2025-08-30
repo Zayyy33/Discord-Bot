@@ -112,10 +112,9 @@ async def soal(ctx):
         color=discord.Color.orange()
     )
     pesan = await ctx.send(embed=embed)
-    
-    await msg.add_reaction("🟢")
-    await msg.add_reaction("🟡")
-    await msg.add_reaction("🔴")
+    await pesan.add_reaction("🟢")
+    await pesan.add_reaction("🟡")
+    await pesan.add_reaction("🔴")
 
     bot.soal_message_id = pesan.id 
     bot.soal_user_id = ctx.author.id
