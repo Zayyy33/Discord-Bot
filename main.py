@@ -104,13 +104,6 @@ async def get_soal():
         async with session.get(url) as resp:
             return await resp.json()
 
-
-emoji_level = {
-    "🟢": integral_mudah,
-    "🟡": integral_sedang,
-    "🔴": integral_susah   
-}
-
 @bot.command(name="int")
 async def soal(ctx):
     embed = discord.Embed(
@@ -120,15 +113,29 @@ async def soal(ctx):
     )
     pesan = await ctx.send(embed=embed)
     
-    for e in emoji_level.keys(): # Tambahkan reaction
-        await pesan.add_reaction(e)
+    await msg.add_reaction("🟢")
+    await msg.add_reaction("🟡")
+    await msg.add_reaction("🔴")
 
-    bot.soal_message_id = pesan.id # Simpan pesan ini supaya bisa dicek di on_reaction_add
+    bot.soal_message_id = pesan.id 
     bot.soal_user_id = ctx.author.id
 
 @bot.event
 async def on_reaction_add(reaction, user):
+    return (
+            user == ctx.author
+            and str(reaction.emoji) in ["🟢", "🟡", "🔴"]
+        )
+    
     soal_data = await get_soal()
+    
+    if str(reaction.emoji) == "🟢":
+        level = "integral_mudah"
+    elif str(reaction.emoji) == "🟡":
+        level = "integral_sedang"
+    else:
+        level = "integral_susah"
+
     if user.bot:
         return
 
@@ -137,13 +144,9 @@ async def on_reaction_add(reaction, user):
         if user.id != getattr(bot, "soal_user_id", None):
             return  # hanya user yang panggil !soal yang bisa pilih
 
-        if reaction.emoji in emoji_level:
-            # ambil soal random dari list sesuai level
-            soal = random.choice(soal_data[reaction.emoji])
-            await reaction.message.channel.send(soal)
-
-            # hapus pesan embed pilihan level
-            await reaction.message.delete()
+        soal = random.choice(soal_data[level])
+        await reaction.message.channel.send(soal)
+        await reaction.message.delete()
 
 
 class SetGroup(app_commands.Group):
