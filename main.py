@@ -121,34 +121,24 @@ async def soal(ctx):
 
 @bot.event
 async def on_reaction_add(reaction, user):
-    if user.bot:
-        return reaction.message.channel.send("kode 1")
-        
-    if reaction.message.id != getattr(bot, "soal_message_id", None):
-        return reaction.message.channel.send("kode 2")
+    if reaction.message.id == getattr(bot, "soal_message_id", None):
+        if user.id != getattr(bot, "soal_user_id", None):
+            return  # hanya user yang panggil !soal yang bisa pilih
 
-    if user.id != getattr(bot, "soal_user_id", None):
-        return reaction.message.channel.send("kode 3")
+        if reaction.emoji in emoji_level:
+            soal_data = await get_soal()
 
-    if str(reaction.emoji) not in ["🟢", "🟡", "🔴"]:
-        return reaction.message.channel.send("kode 3")
+            if str(reaction.emoji) == "🟢":
+                level = "integral_mudah"
+            elif str(reaction.emoji) == "🟡":
+                level = "integral_sedang"
+            else:
+                level = "integral_susah"
+            # ambil soal random dari list sesuai level
+            soal = random.choice(soal_data[level])
+            await reaction.message.channel.send(soal)
 
-    # --- kalau lolos semua, ambil soal ---
-    soal_data = await get_soal()
-
-    if str(reaction.emoji) == "🟢":
-        level = "integral_mudah"
-    elif str(reaction.emoji) == "🟡":
-        level = "integral_sedang"
-    else:
-        level = "integral_susah"
-
-    soal = random.choice(soal_data[level])
-    await reaction.message.channel.send(soal)
-
-    # hapus pesan embed setelah pilih
-    await reaction.message.delete()
-
+            await reaction.message.delete()
 
 class SetGroup(app_commands.Group):
 
