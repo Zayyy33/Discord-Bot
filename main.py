@@ -99,7 +99,7 @@ async def info(ctx):
     await ctx.send(embed=info)
 
 async def get_soal():
-    url = "https://raw.githubusercontent.com/Zayyy33/Discord-Bot/main/soal_int.json"
+    url = "https://raw.githubusercontent.com/Zayyy33/Discord-Bot/refs/heads/main/soal_int.json"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
             return await resp.json()
@@ -121,21 +121,17 @@ async def soal(ctx):
 
 @bot.event
 async def on_reaction_add(reaction, user):
-    # 1. abaikan kalau dari bot
     if user.bot:
-        return
-
-    # 2. cek apakah reaction di pesan soal
+        return reaction.message.channel.send(kode 1)
+        
     if reaction.message.id != getattr(bot, "soal_message_id", None):
-        return
+        return reaction.message.channel.send(kode 2)
 
-    # 3. cek apakah user yang benar
     if user.id != getattr(bot, "soal_user_id", None):
-        return
+        return reaction.message.channel.send(kode 3)
 
-    # 4. cek apakah emoji valid
     if str(reaction.emoji) not in ["🟢", "🟡", "🔴"]:
-        return
+        return reaction.message.channel.send(kode 3)
 
     # --- kalau lolos semua, ambil soal ---
     soal_data = await get_soal()
