@@ -5,6 +5,8 @@ import datetime
 from sympy import sympify, simplify
 import os
 import random
+import json
+import aiohttp
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -24,6 +26,12 @@ data = {
     "image": None,
     "jawaban_benar": None
 }
+
+async def get_soal():
+    url = "https://raw.githubusercontent.com/USERNAME/REPO/main/soal.json"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            return await resp.json()
 
 
 @bot.event
