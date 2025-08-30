@@ -104,7 +104,6 @@ async def get_soal():
         async with session.get(url) as resp:
             return await resp.json()
 
-soal_data = await get_soal()
 
 emoji_level = {
     "🟢": integral_mudah,
@@ -129,6 +128,7 @@ async def soal(ctx):
 
 @bot.event
 async def on_reaction_add(reaction, user):
+    soal_data = await get_soal()
     if user.bot:
         return
 
