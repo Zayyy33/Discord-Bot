@@ -102,7 +102,7 @@ async def get_soal():
     url = "https://raw.githubusercontent.com/Zayyy33/Discord-Bot/main/soal_int.json"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
-            return await resp.json()
+            return await resp.json(content_type=None)
 
 @bot.command(name="int")
 async def soal(ctx):
