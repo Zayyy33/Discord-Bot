@@ -122,16 +122,16 @@ async def soal(ctx):
 @bot.event
 async def on_reaction_add(reaction, user):
     if user.bot:
-        return reaction.message.channel.send(kode 1)
+        return reaction.message.channel.send("kode 1")
         
     if reaction.message.id != getattr(bot, "soal_message_id", None):
-        return reaction.message.channel.send(kode 2)
+        return reaction.message.channel.send("kode 2")
 
     if user.id != getattr(bot, "soal_user_id", None):
-        return reaction.message.channel.send(kode 3)
+        return reaction.message.channel.send("kode 3")
 
     if str(reaction.emoji) not in ["🟢", "🟡", "🔴"]:
-        return reaction.message.channel.send(kode 3)
+        return reaction.message.channel.send("kode 3")
 
     # --- kalau lolos semua, ambil soal ---
     soal_data = await get_soal()
