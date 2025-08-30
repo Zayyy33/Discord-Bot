@@ -121,13 +121,25 @@ async def soal(ctx):
 
 @bot.event
 async def on_reaction_add(reaction, user):
-    return (
-            user == ctx.author
-            and str(reaction.emoji) in ["🟢", "🟡", "🔴"]
-        )
-    
+    # 1. abaikan kalau dari bot
+    if user.bot:
+        return
+
+    # 2. cek apakah reaction di pesan soal
+    if reaction.message.id != getattr(bot, "soal_message_id", None):
+        return
+
+    # 3. cek apakah user yang benar
+    if user.id != getattr(bot, "soal_user_id", None):
+        return
+
+    # 4. cek apakah emoji valid
+    if str(reaction.emoji) not in ["🟢", "🟡", "🔴"]:
+        return
+
+    # --- kalau lolos semua, ambil soal ---
     soal_data = await get_soal()
-    
+
     if str(reaction.emoji) == "🟢":
         level = "integral_mudah"
     elif str(reaction.emoji) == "🟡":
@@ -135,17 +147,11 @@ async def on_reaction_add(reaction, user):
     else:
         level = "integral_susah"
 
-    if user.bot:
-        return
+    soal = random.choice(soal_data[level])
+    await reaction.message.channel.send(soal)
 
-    # pastikan reaction di pesan soal
-    if reaction.message.id == getattr(bot, "soal_message_id", None):
-        if user.id != getattr(bot, "soal_user_id", None):
-            return  # hanya user yang panggil !soal yang bisa pilih
-
-        soal = random.choice(soal_data[level])
-        await reaction.message.channel.send(soal)
-        await reaction.message.delete()
+    # hapus pesan embed setelah pilih
+    await reaction.message.delete()
 
 
 class SetGroup(app_commands.Group):
