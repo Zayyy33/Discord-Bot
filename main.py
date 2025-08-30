@@ -27,13 +27,6 @@ data = {
     "jawaban_benar": None
 }
 
-async def get_soal():
-    url = "https://raw.githubusercontent.com/USERNAME/REPO/main/soal.json"
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as resp:
-            return await resp.json()
-
-
 @bot.event
 async def on_ready():
     await bot.tree.sync()
@@ -105,6 +98,14 @@ async def info(ctx):
         color=discord.Color.purple())
     await ctx.send(embed=info)
 
+async def get_soal():
+    url = "https://raw.githubusercontent.com/Zayyy33/Discord-Bot/refs/heads/main/soal_int.json"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            return await resp.json()
+
+soal_data = await get_soal()
+
 emoji_level = {
     "🟢": integral_mudah,
     "🟡": integral_sedang,
@@ -138,7 +139,7 @@ async def on_reaction_add(reaction, user):
 
         if reaction.emoji in emoji_level:
             # ambil soal random dari list sesuai level
-            soal = random.choice(emoji_level[reaction.emoji])
+            soal = random.choice(soal_data[reaction.emoji])
             await reaction.message.channel.send(soal)
 
             # hapus pesan embed pilihan level
