@@ -48,7 +48,7 @@ async def tampilkan_soal(ctx):
                               color=discord.Color.yellow())
         embed.set_image(url=f'{data["image"]}')
 
-        await channel.send(embed=embed)
+        await ctx.send(embed=embed)
         await ctx.send(":grey_question: Ketik ``/answer`` untuk menjawab \n"
                        ":exclamation: Jawaban hanya berbentuk angka!")
     else:
