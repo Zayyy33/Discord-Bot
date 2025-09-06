@@ -149,10 +149,10 @@ async def on_reaction_add(reaction, user):
 
             soal = random.choice(soal_int_data[level])
             jawaban = jwb_int_data.get(kunci_jawaban, {}).get(soal)
-            gambar_jwb = await reaction.message.channel.send(jawaban)
             gambar_soal = await reaction.message.channel.send(soal)
             await gambar_soal.add_reaction("🔑")
             await gambar_soal.add_reaction("🔒")
+            await gambar_soal.add_reaction("🗑️")
             await reaction.message.delete()
 
             # Simpan jawaban terkait message.id
@@ -165,13 +165,17 @@ async def on_reaction_add(reaction, user):
             return
 
         if reaction.emoji == "🔑":
-            await reaction.message.channel.send("kode 1 berhasil")
             jawaban = bot.jawaban_cache.get(reaction.message.id)
             if jawaban:
-                await reaction.message.channel.send("kode 2 berhasil")
+                await reaction.message.channel.send("Kunci jawaban 🔑")
                 await reaction.message.channel.send(jawaban)
+                await reaction.message.clear_reactions()
+            else:
+                await reaction.message.channel.send("Jawaban mungkin belum terdata/ditulis ⁉️")
         elif reaction.emoji == "🔒":
             await reaction.message.clear_reactions()
+        elif reaction.emoji == "🗑️":
+            await reaction.message.delete()
             
             
 
