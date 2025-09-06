@@ -165,8 +165,10 @@ async def on_reaction_add(reaction, user):
             return
 
         if reaction.emoji == "🔑":
+            await reaction.message.channel.send("kode 1 berhasil")
             jawaban = bot.jawaban_cache.get(reaction.message.id)
             if jawaban:
+                await reaction.message.channel.send("kode 2 berhasil")
                 await reaction.message.channel.send(jawaban)
         elif reaction.emoji == "🔒":
             await reaction.message.clear_reactions()
