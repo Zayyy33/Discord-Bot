@@ -59,10 +59,9 @@ async def tampilkan_soal(ctx):
 @app_commands.describe(jawaban="Masukkan jawaban anda disini")
 async def answer(interaction: discord.Interaction, jawaban: str):
     try:
-        # Agar spasi tidak dianggap
+        # biar spasi tidak dianggap
         jawaban = jawaban.lower().replace(" ", "")
-
-        # Evaluasi ekspresi matematika user
+        # deteksi ekspresi matematika user
         ekspresi_user = simplify(sympify(jawaban))
 
         if ekspresi_user == data["jawaban_benar"]:
@@ -134,10 +133,11 @@ async def on_reaction_add(reaction, user):
                 level = "integral_sedang"
             else:
                 level = "integral_susah"
-            # ambil soal random dari list sesuai level
             soal = random.choice(soal_data[level])
-            await reaction.message.channel.send(soal)
-
+            gambar_soal = await reaction.message.channel.send(soal)
+            await gambar_soal.add_reaction("🔑")
+            await gambar_soal.add_reaction("🔒")
+            
             await reaction.message.delete()
 
 class SetGroup(app_commands.Group):
