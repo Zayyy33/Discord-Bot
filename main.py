@@ -129,11 +129,15 @@ async def on_reaction_add(reaction, user):
 
             if str(reaction.emoji) == "🟢":
                 level = "integral_mudah"
+                kunci_jawaban = "soal_int_mudah"
             elif str(reaction.emoji) == "🟡":
                 level = "integral_sedang"
+                kunci_jawaban = "soal_int_sedang"
             else:
                 level = "integral_susah"
+                kunci_jawaban = "soal_int_susah"
             soal = random.choice(soal_data[level])
+            jawaban = 
             gambar_soal = await reaction.message.channel.send(soal)
             await gambar_soal.add_reaction("🔑")
             await gambar_soal.add_reaction("🔒")
