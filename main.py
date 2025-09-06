@@ -148,7 +148,8 @@ async def on_reaction_add(reaction, user):
                 kunci_jawaban = "jawaban_int_susah"
 
             soal = random.choice(soal_int_data[level])
-            jawaban = jwb_int_data.get(kunci_jawaban, {}).get(soal)
+            jawaban = jwb_int_data.get(kunci_jawaban, {}).get(soal[0])
+            kode_soal = jwb_int_data.get(kunci_jawaban, {}).get(soal[1])
             gambar_soal = await reaction.message.channel.send(soal)
             await gambar_soal.add_reaction("🔑")
             await gambar_soal.add_reaction("🔒")
@@ -158,6 +159,7 @@ async def on_reaction_add(reaction, user):
             # Simpan jawaban terkait message.id
             bot.jwb_message_id = gambar_soal.id
             bot.jawaban_cache = {gambar_soal.id: jawaban}
+            bot.kode_soal_cache = {gambar_soal.id: kode_soal}
 
     # === Bagian tampilkan jawaban ===
     elif reaction.message.id == getattr(bot, "jwb_message_id", None):
@@ -166,10 +168,13 @@ async def on_reaction_add(reaction, user):
 
         if reaction.emoji == "🔑":
             jawaban = bot.jawaban_cache.get(reaction.message.id)
+            kode_soal = bot.kode_soal_cache.get(reaction.message.id)
             if jawaban:
                 await reaction.message.channel.send("Kunci jawaban 🔑")
                 await reaction.message.channel.send(jawaban)
                 await reaction.message.clear_reactions()
+                if kode_soal:
+                    await reaction.message.channel.send(f"kode soal : {kode_soal}")
             else:
                 await reaction.message.channel.send("Jawaban mungkin belum terdata/ditulis ⁉️")
                 await reaction.message.clear_reactions()
