@@ -148,8 +148,8 @@ async def on_reaction_add(reaction, user):
                 kunci_jawaban = "jawaban_int_susah"
 
             soal = random.choice(soal_int_data[level])
-            jawaban = jwb_int_data.get(kunci_jawaban, {}).get(soal[0])
-            kode_soal = jwb_int_data.get(kunci_jawaban, {}).get(soal[1])
+            jawaban = jwb_int_data.get(kunci_jawaban, {}).get(soal, [None])[0]
+            kode_soal = jwb_int_data.get(kunci_jawaban, {}).get(soal, [None, None])[1]
             gambar_soal = await reaction.message.channel.send(soal)
             await gambar_soal.add_reaction("🔑")
             await gambar_soal.add_reaction("🔒")
