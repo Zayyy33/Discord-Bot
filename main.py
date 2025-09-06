@@ -172,6 +172,7 @@ async def on_reaction_add(reaction, user):
                 await reaction.message.clear_reactions()
             else:
                 await reaction.message.channel.send("Jawaban mungkin belum terdata/ditulis ⁉️")
+                await reaction.message.clear_reactions()
         elif reaction.emoji == "🔒":
             await reaction.message.clear_reactions()
         elif reaction.emoji == "🗑️":
