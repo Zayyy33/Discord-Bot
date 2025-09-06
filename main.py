@@ -157,7 +157,6 @@ async def on_reaction_add(reaction, user):
 
             # Simpan jawaban terkait message.id
             bot.jwb_message_id = gambar_soal.id
-            bot.jawaban_cache = {gambar_soal.id: jawaban}
 
     # === Bagian tampilkan jawaban ===
     elif reaction.message.id == getattr(bot, "jwb_message_id", None):
@@ -165,9 +164,7 @@ async def on_reaction_add(reaction, user):
             return
 
         if reaction.emoji == "🔑":
-            jawaban = bot.jawaban_cache.get(reaction.message.id)
-            if jawaban:
-                await reaction.message.channel.send(jawaban)
+            await reaction.message.channel.send(jawaban)
         elif reaction.emoji == "🔒":
             await reaction.message.clear_reactions()
             
