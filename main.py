@@ -97,10 +97,16 @@ async def info(ctx):
         color=discord.Color.purple())
     await ctx.send(embed=info)
 
-async def get_soal():
-    url = "https://raw.githubusercontent.com/Zayyy33/Discord-Bot/main/soal_int.json"
+async def get_soal_int():
+    url_1 = "https://raw.githubusercontent.com/Zayyy33/Discord-Bot/main/soal_int.json"
     async with aiohttp.ClientSession() as session:
-        async with session.get(url) as resp:
+        async with session.get(url_1) as resp:
+            return await resp.json(content_type=None)
+
+async def get_jwb_int():
+    url_2 = "https://raw.githubusercontent.com/Zayyy33/Discord-Bot/main/jawaban_int.json"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url_2) as resp:
             return await resp.json(content_type=None)
 
 @bot.command(name="int")
@@ -116,16 +122,20 @@ async def soal(ctx):
     await pesan.add_reaction("🔴")
 
     bot.soal_message_id = pesan.id 
-    bot.soal_user_id = ctx.author.id
+    bot.user_id = ctx.author.id
 
 @bot.event
 async def on_reaction_add(reaction, user):
+    if user.bot:
+        return
+    
     if reaction.message.id == getattr(bot, "soal_message_id", None):
-        if user.id != getattr(bot, "soal_user_id", None):
-            return  # hanya user yang panggil !soal yang bisa pilih
+        if user.id != getattr(bot, "user_id", None):
+            return  
 
         if reaction.emoji in ["🟢", "🟡", "🔴"]:
-            soal_data = await get_soal()
+            soal_int_data = await get_soal_int()
+            jwb_int_data = await get_jwb_int()
 
             if str(reaction.emoji) == "🟢":
                 level = "integral_mudah"
@@ -136,13 +146,32 @@ async def on_reaction_add(reaction, user):
             else:
                 level = "integral_susah"
                 kunci_jawaban = "soal_int_susah"
-            soal = random.choice(soal_data[level])
-            jawaban = 
+
+            soal = random.choice(soal_int_data[level])
+            jawaban = jwb_int_data.get(kunci_jawaban, {}).get(soal)
+
             gambar_soal = await reaction.message.channel.send(soal)
             await gambar_soal.add_reaction("🔑")
             await gambar_soal.add_reaction("🔒")
-            
             await reaction.message.delete()
+
+            # Simpan jawaban terkait message.id
+            bot.jwb_message_id = gambar_soal.id
+            bot.jawaban_cache = {gambar_soal.id: jawaban}
+
+    # === Bagian tampilkan jawaban ===
+    elif reaction.message.id == getattr(bot, "jwb_message_id", None):
+        if user.id != getattr(bot, "user_id", None):
+            return
+
+        if reaction.emoji == "🔑":
+            jawaban = bot.jawaban_cache.get(reaction.message.id)
+            if jawaban:
+                await reaction.message.channel.send(jawaban)
+        elif reaction.emoji == "🔒":
+            await reaction.message.clear_reactions()
+            
+            
 
 class SetGroup(app_commands.Group):
 
